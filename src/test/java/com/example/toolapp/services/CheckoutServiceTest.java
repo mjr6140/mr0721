@@ -20,7 +20,24 @@ public class CheckoutServiceTest {
     private CheckoutService checkoutService;
 
     @Test
-    public void testCase1() {
+    public void testDaysLessThan1() {
+        ToolCheckout toolCheckout = new ToolCheckout();
+        toolCheckout.setToolCode("JAKR");
+        toolCheckout.setCheckoutDate(LocalDate.parse("2015-09-03"));
+        toolCheckout.setRentalDayCount(0);
+        toolCheckout.setDiscountPercent(0);
+
+        Exception exception = assertThrows(CheckoutException.class, () -> {
+            checkoutService.checkout(toolCheckout);
+        });
+
+        String expectedMessage = "Rental days must be >= to 1: 0";
+        String actualMessage = exception.getMessage();
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    public void testCase1_PercentGreaterThan100() {
         ToolCheckout toolCheckout = new ToolCheckout();
         toolCheckout.setToolCode("JAKR");
         toolCheckout.setCheckoutDate(LocalDate.parse("2015-09-03"));
